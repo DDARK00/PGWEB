@@ -7,7 +7,9 @@
     --color-accent: #38b2ac;
     --color-dark: #2d3748;
     --color-light: #ffffff;
+    --color-warning: #f44336;
 }
+
 @layer base {
     body {
         @apply bg-light text-dark;

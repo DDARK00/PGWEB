@@ -1,4 +1,3 @@
-import Nav from "./components/common/Nav";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashBoardPage from "./pages/DashBoardPage";
 import TransactionsPage from "./pages/TransactionsPage";
@@ -6,13 +5,14 @@ import MerchantListPage from "./pages/MerchantListPage";
 import TransactionSettlementPage from "./pages/TransactionSettlementPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
+import Layout from "./components/common/Layout";
 
 function App() {
   return (
-    <>
-      <Router>
-        <Nav />
-        <Routes>
+    <Router>
+      <Routes>
+        {/* 기본 레이아웃 */}
+        <Route element={<Layout/>}>
           {/* 대시보드 페이지 */}
           <Route path="/dashboard" element={<DashBoardPage />} />
 
@@ -24,7 +24,7 @@ function App() {
 
           {/* 거래 정산 페이지 */}
           <Route
-            path="/transactions/settlements"
+            path="/settlements"
             element={<TransactionSettlementPage />}
           />
 
@@ -36,11 +36,13 @@ function App() {
 
           {/* 홈 또는 기본 페이지 설정 */}
           <Route path="/" element={<DashBoardPage />} />
-
           {/* 기본 페이지를 대시보드로 설정 */}
-        </Routes>
-      </Router>
-    </>
+        </Route>
+
+        {/* <Route path="*" element={<NotFoundPage />} /> */}
+        {/* 404페이지 */}
+      </Routes>
+    </Router>
   );
 }
 
