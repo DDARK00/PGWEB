@@ -5,11 +5,10 @@ function Nav() {
   // 모바일 메뉴 상태 관리
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(true);
 
-  
   // 메뉴 항목 데이터 (로그인 시 노출)
   const menuLinks = [
     { title: "대시보드", path: "/dashboard" },
-    { title: "거래 내역", path: "/transactions" },
+    { title: "거래 내역", path: "/payments" },
     { title: "가맹점 조회", path: "/merchants" },
     { title: "거래 정산", path: "/settlements" },
     { title: "설정", path: "/settings" },

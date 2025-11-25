@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashBoardPage from "./pages/DashBoardPage";
-import TransactionsPage from "./pages/TransactionsPage";
+import PaymentsPage from "./pages/PaymentsPage";
 import MerchantListPage from "./pages/MerchantListPage";
 import TransactionSettlementPage from "./pages/TransactionSettlementPage";
 import LoginPage from "./pages/LoginPage";
@@ -12,21 +12,18 @@ function App() {
     <Router>
       <Routes>
         {/* 기본 레이아웃 */}
-        <Route element={<Layout/>}>
+        <Route element={<Layout />}>
           {/* 대시보드 페이지 */}
           <Route path="/dashboard" element={<DashBoardPage />} />
 
           {/* 거래 내역 페이지 */}
-          <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/payments" element={<PaymentsPage />} />
 
           {/* 가맹점 조회 페이지 */}
           <Route path="/merchants" element={<MerchantListPage />} />
 
           {/* 거래 정산 페이지 */}
-          <Route
-            path="/settlements"
-            element={<TransactionSettlementPage />}
-          />
+          <Route path="/settlements" element={<TransactionSettlementPage />} />
 
           {/* 로그인 페이지 */}
           <Route path="/login" element={<LoginPage />} />
