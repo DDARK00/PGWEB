@@ -4,6 +4,7 @@ export type Merchant = {
   status?: Number;
   mchtName?: string;
 };
+
 export interface ApiError {
   message: string;
   original: any;

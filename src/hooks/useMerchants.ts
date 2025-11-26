@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { merchants as merchantsApi } from "../apis";
 import { useStore } from "../store/useStore";
-import type { Merchant } from "../store/useStore";
+import type { Merchant } from "../types/types";
 
 export function useMerchantsQuery(enabled = true) {
   const setMerchants = useStore((s) => s.setMerchants);
