@@ -1,6 +1,6 @@
 import { createAxiosInstance } from "./base";
 import ApiHandler from "./apiHandler";
-import type { Merchant } from "../types/types";
+import type { Merchant, MerchantDetail } from "../types/types";
 
 /**
  * Merchants API
@@ -27,4 +27,22 @@ export async function getMerchant(
   throw new Error("Failed to fetch merchants");
 }
 
-export default { getMerchant };
+export async function getDetailMerchant(
+  mchtCode: string,
+  client = createAxiosInstance()
+): Promise<MerchantDetail | null> {
+  // ApiHandler를 사용하여, 응답 객체에서 data 필드를 추출해 반환
+  const response = await ApiHandler<MerchantDetail>(() =>
+    client.get<{ status: number; data?: MerchantDetail; message?: string }>(
+      `/merchants/details/${mchtCode}`
+    )
+  );
+  // 응답이 성공적이고, data가 존재하면 data.data를 반환
+  if (response.success && response.data) {
+    return response.data.data ?? null; // data 필드가 있으면 반환, 없으면 null 반환
+  }
+  // 실패했을 경우 null을 반환하거나 에러 처리
+  throw new Error("Failed to fetch merchant details");
+}
+
+export default { getMerchant, getDetailMerchant };

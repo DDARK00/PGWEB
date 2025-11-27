@@ -13,7 +13,10 @@ const STATUS_MAP: Record<string, number> = {
 
 export type StatusOption = { value: string; label: string };
 
-export default function useFilterSortMerchants(initialItems: Merchant[] = []) {
+export default function useFilterSortMerchants(
+  initialItems: Merchant[] = [],
+  externalStatuses?: { value: string; label: string }[]
+) {
   const [statusFilter, setStatusFilter] = useState<string | "ALL">("ALL");
   const [bizTypeFilters, setBizTypeFilters] = useState<string[]>([]);
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
@@ -79,6 +82,9 @@ export default function useFilterSortMerchants(initialItems: Merchant[] = []) {
   }, [initialItems]);
 
   const availableStatuses: StatusOption[] = useMemo(() => {
+    if (externalStatuses && externalStatuses.length > 0)
+      return externalStatuses;
+
     const map = new Map<string, string>();
     for (const m of initialItems) {
       const raw = (m as any).status;
@@ -95,7 +101,7 @@ export default function useFilterSortMerchants(initialItems: Merchant[] = []) {
       value,
       label,
     }));
-  }, [initialItems]);
+  }, [initialItems, externalStatuses]);
 
   // 필터 내의 정렬 로직
   const sorted = useMemo(() => {

@@ -1,4 +1,4 @@
-import React from "react";
+// react import removed (JSX runtime handles it)
 import type { Merchant } from "../../types/types";
 import type {
   SortKey,

@@ -3,7 +3,7 @@ import type { AxiosInstance } from "axios";
 
 let instance: AxiosInstance | null = null;
 
-const BASE_URL = "https://recruit.paysbypays.com/api/v1";
+export const BASE_URL = "https://recruit.paysbypays.com/api/v1";
 
 export const createAxiosInstance = (): AxiosInstance => {
   if (instance) return instance;

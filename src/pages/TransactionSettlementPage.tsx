@@ -1,5 +1,4 @@
-function TransactionSettlementPage() {
-    return ( <>거래 정산 페이지</> );
+// TransactionSettlementPage removed - integrated into PaymentsPage as of feature update.
+export default function TransactionSettlementPage() {
+  return null;
 }
-
-export default TransactionSettlementPage;

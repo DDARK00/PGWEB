@@ -5,6 +5,19 @@ export type Merchant = {
   mchtName?: string;
 };
 
+export type MerchantDetail = {
+  mchtCode: string;
+  mchtName: string;
+  status: string;
+  bizType: string;
+  bizNo: string;
+  address: string;
+  phone: string;
+  email: string;
+  registeredAt: string;
+  updatedAt: string;
+};
+
 export interface ApiError {
   message: string;
   original: any;

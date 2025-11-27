@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import DashBoardPage from "./pages/DashBoardPage";
 import PaymentsPage from "./pages/PaymentsPage";
 import MerchantListPage from "./pages/MerchantListPage";
-import TransactionSettlementPage from "./pages/TransactionSettlementPage";
 import LoginPage from "./pages/LoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import Layout from "./components/common/Layout";
@@ -22,8 +21,7 @@ function App() {
           {/* 가맹점 조회 페이지 */}
           <Route path="/merchants" element={<MerchantListPage />} />
 
-          {/* 거래 정산 페이지 */}
-          <Route path="/settlements" element={<TransactionSettlementPage />} />
+          {/* 거래 정산 페이지: 통합되어 더 이상 별도 페이지 없음 */}
 
           {/* 로그인 페이지 */}
           <Route path="/login" element={<LoginPage />} />

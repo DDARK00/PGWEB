@@ -2,7 +2,11 @@ import { useMemo, useState } from "react";
 import { useMerchantsQuery } from "../hooks/useMerchants";
 import useStore from "../store/useStore";
 import useFilterSortMerchants from "../hooks/useFilterSortMerchants";
+import { common as commonApi } from "../apis";
+import { useQuery } from "@tanstack/react-query";
 import { MerchantFilterBar, MerchantTable } from "../components/merchants";
+import MerchantDetailPanel from "../components/merchants/MerchantDetailPanel";
+import { getDetailMerchant } from "../apis/merchants";
 
 function MerchantListPage() {
   const query = useMerchantsQuery();
@@ -26,6 +30,21 @@ function MerchantListPage() {
     );
   }, [list, search]);
 
+  const mchtStatusQuery = useQuery({
+    queryKey: ["common", "mchtStatus"],
+    queryFn: () => commonApi.getMchtStatus(),
+    enabled: true,
+  });
+
+  const apiStatuses = useMemo(
+    () =>
+      mchtStatusQuery.data?.data?.data?.map((s: any) => ({
+        value: String(s.code),
+        label: String(s.description ?? s.code),
+      })) ?? undefined,
+    [mchtStatusQuery.data]
+  );
+
   const {
     items,
     bizTypeFilters,
@@ -38,7 +57,29 @@ function MerchantListPage() {
     toggleSort,
     availableBizTypes,
     availableStatuses,
-  } = useFilterSortMerchants(searched);
+  } = useFilterSortMerchants(searched, apiStatuses);
+
+  // selected merchant detail state
+  const [selectedCode, setSelectedCode] = useState<string | null>(null);
+  const [detail, setDetail] = useState<any | null>(null);
+  const [loadingDetail, setLoadingDetail] = useState(false);
+  const [detailError, setDetailError] = useState<string | null>(null);
+
+  const onRowClick = async (m: any) => {
+    const code = m.mchtCode;
+    setSelectedCode(code);
+    setDetail(null);
+    setDetailError(null);
+    setLoadingDetail(true);
+    try {
+      const res = await getDetailMerchant(code);
+      setDetail(res);
+    } catch (e: any) {
+      setDetailError(e?.message ?? "상세 조회 오류");
+    } finally {
+      setLoadingDetail(false);
+    }
+  };
 
   if (query.isLoading) return <div>Loading merchants...</div>;
   if (query.isError) return <div>Error loading merchants</div>;
@@ -62,12 +103,32 @@ function MerchantListPage() {
           onSearch={(q) => setSearch(q)}
         />
 
-        <MerchantTable
-          items={items}
-          sortKey={sortKey}
-          sortDirection={sortDirection}
-          onToggleSort={toggleSort}
-        />
+        <div className="flex gap-4 items-start">
+          <div className="flex-1">
+            <MerchantTable
+              items={items}
+              sortKey={sortKey}
+              sortDirection={sortDirection}
+              onToggleSort={toggleSort}
+              onRowClick={onRowClick}
+            />
+          </div>
+
+          <div className="hidden sm:block">
+            {selectedCode !== null && (
+              <MerchantDetailPanel
+                detail={detail}
+                loading={loadingDetail}
+                error={detailError}
+                onClose={() => {
+                  setSelectedCode(null);
+                  setDetail(null);
+                  setDetailError(null);
+                }}
+              />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

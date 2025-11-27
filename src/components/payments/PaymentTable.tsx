@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { Payment } from "../../types/types";
 import type { SortKey, SortDirection } from "../../hooks/useFilterSortPayments";
 import PaymentRow from "./PaymentRow";

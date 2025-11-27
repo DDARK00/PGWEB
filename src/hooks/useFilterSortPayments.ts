@@ -4,13 +4,23 @@ import type { Payment } from "../types/types";
 export type SortKey = "paymentCode" | "mchtCode" | "amount" | "paymentAt";
 export type SortDirection = "asc" | "desc" | "default";
 
-export default function useFilterSortPayments(initialItems: Payment[] = []) {
+export default function useFilterSortPayments(
+  initialItems: Payment[] = [],
+  externalPayTypes?: string[],
+  externalStatuses?: { value: string; label: string }[]
+) {
   const [statusFilter, setStatusFilter] = useState<string | "ALL">("ALL");
   const [payTypeFilters, setPayTypeFilters] = useState<string[]>([]);
   const [sortKey, setSortKey] = useState<SortKey | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>("default");
 
   const togglePayType = useCallback((p: string) => {
+    // Special handling for ALL: selecting ALL clears specific filters
+    if (String(p).toUpperCase() === "ALL") {
+      setPayTypeFilters([]);
+      return;
+    }
+
     setPayTypeFilters((prev) =>
       prev.includes(p) ? prev.filter((x) => x !== p) : [...prev, p]
     );
@@ -63,19 +73,25 @@ export default function useFilterSortPayments(initialItems: Payment[] = []) {
   }, [initialItems, statusFilter, payTypeFilters]);
 
   const availablePayTypes = useMemo(() => {
+    if (externalPayTypes && externalPayTypes.length > 0)
+      return externalPayTypes;
+
     const set = new Set<string>();
     for (const p of initialItems) if (p.payType) set.add(String(p.payType));
     return Array.from(set).sort((a, b) => String(a).localeCompare(String(b)));
-  }, [initialItems]);
+  }, [initialItems, externalPayTypes]);
+  // include externalPayTypes in deps
 
   const availableStatuses = useMemo(() => {
+    if (externalStatuses && externalStatuses.length > 0)
+      return externalStatuses;
     const set = new Set<string>();
     for (const p of initialItems) if (p.status) set.add(String(p.status));
     return Array.from(set).map((v) => ({
       value: v,
       label: String(v).toUpperCase(),
     }));
-  }, [initialItems]);
+  }, [initialItems, externalStatuses]);
 
   const sorted = useMemo(() => {
     if (!sortKey || sortDirection === "default") return filtered;

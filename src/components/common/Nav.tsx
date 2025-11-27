@@ -3,7 +3,7 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 
 function Nav() {
   // 모바일 메뉴 상태 관리
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // 메뉴 항목 데이터 (로그인 시 노출)
   const menuLinks = [

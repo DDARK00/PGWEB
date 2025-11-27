@@ -1,8 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { usePaymentsQuery } from "../hooks/usePayments";
 import { useStore } from "../store/useStore";
 import useFilterSortPayments from "../hooks/useFilterSortPayments";
 import { PaymentFilterBar, PaymentTable } from "../components/payments";
+import PaymentsVisualizationPanel from "../components/payments/PaymentsVisualizationPanel";
+import { common as commonApi } from "../apis";
 
 function PaymentsPage() {
   const query = usePaymentsQuery();
@@ -13,17 +16,35 @@ function PaymentsPage() {
     [payments, query.data]
   );
 
-  const [search, setSearch] = useState("");
+  const searched = all ?? [];
 
-  const searched = useMemo(() => {
-    if (!search) return all ?? [];
-    const q = search.trim().toLowerCase();
-    return (all ?? []).filter(
-      (p) =>
-        (p.paymentCode ?? "").toLowerCase().includes(q) ||
-        (p.mchtCode ?? "").toLowerCase().includes(q)
-    );
-  }, [all, search]);
+  const paymentTypesQuery = useQuery({
+    queryKey: ["common", "paymentTypes"],
+    queryFn: () => commonApi.getPaymentType(),
+    enabled: true,
+  });
+
+  const paymentStatusesQuery = useQuery({
+    queryKey: ["common", "paymentStatuses"],
+    queryFn: () => commonApi.getPaymentStatus(),
+    enabled: true,
+  });
+
+  const apiPayTypes = useMemo(
+    () =>
+      paymentTypesQuery.data?.data?.data?.map((p: any) => String(p.type)) ??
+      undefined,
+    [paymentTypesQuery.data]
+  );
+
+  const apiStatuses = useMemo(
+    () =>
+      paymentStatusesQuery.data?.data?.data?.map((s: any) => ({
+        value: String(s.code),
+        label: String(s.code),
+      })) ?? undefined,
+    [paymentStatusesQuery.data]
+  );
 
   const {
     items,
@@ -37,7 +58,7 @@ function PaymentsPage() {
     toggleSort,
     availablePayTypes,
     availableStatuses,
-  } = useFilterSortPayments(searched);
+  } = useFilterSortPayments(searched, apiPayTypes, apiStatuses);
 
   if (query.isLoading) return <div>Loading payments...</div>;
   if (query.isError) return <div>Error loading payments</div>;
@@ -58,8 +79,9 @@ function PaymentsPage() {
           availableStatuses={availableStatuses}
           onTogglePayType={(p) => togglePayType(p)}
           onReset={resetFilters}
-          onSearch={(q) => setSearch(q)}
         />
+
+        <PaymentsVisualizationPanel items={items} />
 
         <PaymentTable
           items={items}
