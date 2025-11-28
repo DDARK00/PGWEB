@@ -2,8 +2,6 @@
 
 이 프로젝트는 [PG 도메인 관련 시스템]을 관리하는 웹 애플리케이션입니다. 사용자는 대시보드에서 중요한 통계를 확인하고, 거래 내역을 조회하고 관리할 수 있습니다. 또한, 가맹점 관리 및 거래 내역 정산 등의 기능을 제공합니다.
 
-## 사용한 기술
-
 ---
 
 ## 기술 스택
@@ -81,3 +79,11 @@ staleTime(데이터 폐기 시간)을 느리게 설정한다면 실시간성이 
 데이터 구조만 다르고 핵심 로직은 동일한데, 추상화 단계를 높여서 재사용했으면 어땠을까 함.
 
 cursor pointer 등 UI/UX의 디테일이 떨어지는 부분이 다수 존재
+
+---
+
+![image](./src/assets/images/1.png)
+![image](./src/assets/images/2.png)
+![image](./src/assets/images/3.png)
+![image](./src/assets/images/4.png)
+![image](./src/assets/images/5.png)
