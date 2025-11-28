@@ -3,10 +3,10 @@ import type { Merchant, Payment } from "../../types/types";
 
 type Props = { payments: Payment[]; merchants: Merchant[] };
 
-export default function DashboardRecent({ payments, merchants }: Props) {
+export default function DashboardRecent({ payments }: Props) {
   const navigate = useNavigate();
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1  gap-4">
       <div className="bg-white p-4 rounded shadow">
         <h3 className="text-sm font-medium mb-2">최근 결제 (상위 5)</h3>
         <div className="text-sm text-slate-700">
@@ -69,14 +69,6 @@ export default function DashboardRecent({ payments, merchants }: Props) {
               );
             }) ?? <div className="p-2">데이터 없음</div>}
         </div>
-      </div>
-
-      <div className="bg-white p-4 rounded shadow">
-        <h3 className="text-sm font-medium mb-2">가맹점 추가 통계</h3>
-        <div className="text-xs text-slate-500 mb-2">
-          (위의 가맹점 통계와 같은 사이즈로 표시됩니다)
-        </div>
-        <div className="text-sm">총 가맹점 수: {merchants?.length ?? 0}</div>
       </div>
     </div>
   );
