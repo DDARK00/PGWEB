@@ -10,12 +10,11 @@ function Nav() {
     { title: "대시보드", path: "/dashboard" },
     { title: "거래 내역", path: "/payments" },
     { title: "가맹점 조회", path: "/merchants" },
-    { title: "거래 정산", path: "/settlements" },
-    { title: "설정", path: "/settings" },
   ];
 
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, _] = useState<boolean>(true);
+  // const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
 
   // 간단한 로그인 상태 확인: 예) localStorage에 'authToken' 존재 여부
   // useEffect(() => {

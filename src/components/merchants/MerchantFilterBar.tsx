@@ -57,34 +57,78 @@ export default function MerchantFilterBar({
                 } else {
                   for (const s of statusOptionsFallback) {
                     // fallback entries -> {value,label}
-                    const val = (s as any).value ?? String(s);
+                    const rawVal = (s as unknown as Record<string, unknown>)
+                      .value;
+                    const val =
+                      rawVal !== undefined ? String(rawVal) : String(s);
                     if (String(val).toUpperCase() === "ALL") continue;
+                    const rawLabel = (s as unknown as Record<string, unknown>)
+                      .label;
                     list.push({
                       value: String(val),
-                      label: (s as any).label ?? String(val),
+                      label: String(rawLabel ?? val),
                     });
                   }
                 }
 
-                return list.map((s) => (
-                  <button
-                    key={s.value}
-                    onClick={() => onStatusChange(s.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ")
-                        onStatusChange(s.value);
-                    }}
-                    aria-pressed={status === s.value}
-                    tabIndex={0}
-                    className={`px-3 py-1 rounded text-sm border focus:outline-none focus:ring-2 focus:ring-blue-300 ${
-                      status === s.value
-                        ? "bg-blue-600 text-white border-transparent"
-                        : "bg-transparent text-slate-700 border-slate-200"
-                    } cursor-pointer whitespace-nowrap`}
-                  >
-                    {s.label}
-                  </button>
-                ));
+                return list.map((s) => {
+                  const val = String(s.value).toUpperCase();
+                  // map some common labels to English for display
+                  const labelMap: Record<string, string> = {
+                    대기: "PENDING",
+                    활성: "ACTIVE",
+                    중지: "SUSPENDED",
+                    폐기: "DISCARDED",
+                    READY: "PENDING",
+                    ACTIVE: "ACTIVE",
+                    STOP: "SUSPENDED",
+                    CLOSED: "DISCARDED",
+                  };
+                  const rawLabel2 = (s as unknown as Record<string, unknown>)
+                    .label;
+                  const normalizedLabel = String(rawLabel2 ?? val);
+                  const displayLabel =
+                    labelMap[normalizedLabel] ?? normalizedLabel;
+
+                  // color mapping for status buttons (except ALL)
+                  let activeClass =
+                    "bg-transparent text-slate-700 border-slate-200";
+                  if (status === s.value) {
+                    // when active, choose color by status
+                    if (val === "ALL")
+                      activeClass = "bg-blue-600 text-white border-transparent";
+                    else if (["PENDING", "READY"].includes(val))
+                      activeClass =
+                        "bg-yellow-400 text-black border-transparent";
+                    else if (val === "ACTIVE")
+                      activeClass =
+                        "bg-emerald-600 text-white border-transparent";
+                    else if (["SUSPENDED", "STOP"].includes(val))
+                      activeClass =
+                        "bg-slate-400 text-white border-transparent";
+                    else if (["DISCARDED", "CLOSED"].includes(val))
+                      activeClass = "bg-red-600 text-white border-transparent";
+                    else
+                      activeClass =
+                        "bg-slate-600 text-white border-transparent";
+                  }
+
+                  return (
+                    <button
+                      key={s.value}
+                      onClick={() => onStatusChange(s.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          onStatusChange(s.value);
+                      }}
+                      aria-pressed={status === s.value}
+                      tabIndex={0}
+                      className={`px-3 py-1 rounded text-sm border focus:outline-none focus:ring-2 focus:ring-blue-300 ${activeClass} cursor-pointer whitespace-nowrap`}
+                    >
+                      {displayLabel}
+                    </button>
+                  );
+                });
               })()}
             </div>
           </div>

@@ -1,5 +1,3 @@
-import type { SortDirection } from "../../hooks/useFilterSortPayments";
-
 type StatusOption = { value: string; label: string };
 
 type Props = {

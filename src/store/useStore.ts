@@ -1,7 +1,9 @@
 import { create } from "zustand";
 import type { Merchant, Payment } from "../types/types";
 
-export type CommonData = Record<string, any> | null;
+// `common`은 서버에서 구조화되지 않은 임의의 키/값 페이로드를 받을 수 있습니다.
+// 가능한 경우 더 구체적인 타입으로 대체하세요. 현재는 `unknown` 기반의 레코드로 정의합니다.
+export type CommonData = Record<string, unknown> | null;
 
 type State = {
   merchants: Merchant[] | null;

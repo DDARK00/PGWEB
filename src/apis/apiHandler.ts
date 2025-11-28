@@ -19,19 +19,23 @@ export async function ApiHandler<T>(
     const res = await fn();
     const payload = res.data;
     return { success: true, data: payload };
-  } catch (err: any) {
-    // axios는 기본적으로 non-2xx 응답에 대해 예외를 던집니다.
-    // 하지만 서버가 본문을 응답으로 보내면(예: 비즈니스 에러 메세지),
-    // 사용자는 "서버가 요청을 처리했다"고 간주할 수 있으므로 success: true 로 반환합니다.
-    if (err?.response?.data) {
-      const payload = err.response.data as ServerPayload<T>;
+  } catch (err: unknown) {
+    // 에러 객체는 axios 또는 네트워크/런타임에서 온 다양한 형태를 가질 수 있습니다.
+    // catch 파라미터는 `unknown`으로 받아야 더 안전합니다. 다만 아래에서
+    // 라이브러리 특정 필드(`response`, `message`, `code`)에 접근해야 하므로
+    // 로컬에서 필요한 경우에만 `any`로 캐스트하여 참조합니다.
+    const anyErr = err as any; // axios 등 외부 라이브러리 에러가 대부분 구조화되어 있어 로컬 캐스트.
+
+    // axios가 에러 응답 본문을 포함한 경우, 서버가 보낸 페이로드를 success로 처리합니다.
+    if (anyErr?.response?.data) {
+      const payload = anyErr.response.data as ServerPayload<T>;
       return { success: true, data: payload };
     }
 
     const apiError: ApiError = {
-      message: err?.message ?? "Unknown error",
+      message: anyErr?.message ?? "Unknown error",
       original: err,
-      code: err?.response?.status ?? err?.code ?? -1,
+      code: anyErr?.response?.status ?? anyErr?.code ?? -1,
     };
     return { success: false, error: apiError };
   }

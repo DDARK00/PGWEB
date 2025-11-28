@@ -24,15 +24,21 @@ function LoginPage() {
     <div className="min-h-screen w-full flex items-center justify-center px-4 bg-light">
       <div className="w-full max-w-lg bg-white rounded-lg shadow-lg p-6">
         <div className="flex items-center justify-center mb-6">
-          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">PW</div>
+          <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">
+            PW
+          </div>
         </div>
 
-        <h2 className="text-2xl font-bold text-primary mb-4 text-center">로그인</h2>
-
+        <h2 className="text-2xl font-bold text-primary mb-4 text-center">
+          로그인
+        </h2>
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-primary">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-primary"
+            >
               이메일
             </label>
             <input
@@ -50,7 +56,10 @@ function LoginPage() {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-primary">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-primary"
+            >
               비밀번호
             </label>
             <input
@@ -68,7 +77,11 @@ function LoginPage() {
           </div>
 
           {errorMessage && (
-            <div role="alert" aria-live="assertive" className="text-warning text-center mb-4">
+            <div
+              role="alert"
+              aria-live="assertive"
+              className="text-warning text-center mb-4"
+            >
               {errorMessage}
             </div>
           )}
@@ -81,10 +94,10 @@ function LoginPage() {
           </button>
 
           <div className="mt-4 flex items-center justify-between text-sm">
-            <Link to="/signup" className="text-accent hover:underline">
+            <Link to="" className="text-accent hover:underline">
               회원가입
             </Link>
-            <Link to="/forgot-password" className="text-primary hover:underline">
+            <Link to="" className="text-primary hover:underline">
               비밀번호 재설정
             </Link>
           </div>

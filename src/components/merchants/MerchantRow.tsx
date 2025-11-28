@@ -7,7 +7,8 @@ type Props = {
 
 export default function MerchantRow({ m, onClick }: Props) {
   const statusLabel = (() => {
-    const s = (m as any).status;
+    // `status`는 서버에서 숫자 또는 문자열로 올 수 있으므로 런타임에 동적 접근합니다.
+    const s = (m as unknown as Record<string, unknown>).status;
     if (typeof s === "number")
       return s === 1 ? "ACTIVE" : s === 2 ? "CLOSED" : "READY";
     if (typeof s === "string") return s.toUpperCase();

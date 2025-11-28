@@ -1,5 +1,4 @@
-import { createAxiosInstance, BASE_URL } from "./base";
-import axios from "axios";
+import { createAxiosInstance } from "./base";
 import { ApiHandler } from "./apiHandler";
 import type { ApiResponse } from "../types/types";
 
@@ -35,36 +34,4 @@ export async function getPaymentStatus(
   );
 }
 
-// health check
-export async function ping(
-  _client = createAxiosInstance()
-): Promise<ApiResponse<Record<string, any>>> {
-  // The health endpoint lives at the API origin (no /api/v1 prefix).
-  const origin = String(BASE_URL).replace(/\/api\/v1\/?$/i, "");
-  const url = `${origin}/health`;
-
-  try {
-    const res = await axios.get<Record<string, any>>(url);
-    // Healthy only when HTTP 200
-    if (res.status === 200) {
-      return { success: true, data: { status: res.status, data: res.data } };
-    }
-    return {
-      success: false,
-      error: {
-        message: `Health check returned ${res.status}`,
-        original: res,
-        code: res.status,
-      },
-    };
-  } catch (err: any) {
-    const apiError = {
-      message: err?.message ?? "Unknown error",
-      original: err,
-      code: err?.response?.status ?? err?.code ?? -1,
-    } as const;
-    return { success: false, error: apiError };
-  }
-}
-
-export default { ping, getMchtStatus, getPaymentType, getPaymentStatus };
+export default { getMchtStatus, getPaymentType, getPaymentStatus };

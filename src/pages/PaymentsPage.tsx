@@ -31,6 +31,9 @@ function PaymentsPage() {
   });
 
   const apiPayTypes = useMemo(
+    // 외부에서 가져오는 공통 코드(결제유형/상태)는 서버 응답 스키마가 명확하지 않아
+    // 현재는 런타임에 `any`로 접근하고 있습니다. 가능한 경우 API 응답 타입을
+    // 정의해 `(p: PaymentType)`처럼 명시적으로 바꾸는 것을 권장합니다.
     () =>
       paymentTypesQuery.data?.data?.data?.map((p: any) => String(p.type)) ??
       undefined,

@@ -57,7 +57,8 @@ export default function useFilterSortMerchants(
     return initialItems.filter((m) => {
       // status filter
       if (statusFilter && statusFilter !== "ALL") {
-        const s = (m as any).status;
+        // status 필드는 서버에서 숫자 또는 문자열로 올 수 있어 런타임 상 동적 접근이 필요합니다.
+        const s = (m as unknown as Record<string, unknown>).status;
         if (String(s) !== String(statusFilter)) return false;
       }
 
@@ -87,7 +88,7 @@ export default function useFilterSortMerchants(
 
     const map = new Map<string, string>();
     for (const m of initialItems) {
-      const raw = (m as any).status;
+      const raw = (m as unknown as Record<string, unknown>).status;
       const value = String(raw);
       // prefer mapping to friendly label if in STATUS_MAP
       const numeric = typeof raw === "number" ? raw : Number(raw);
@@ -109,8 +110,8 @@ export default function useFilterSortMerchants(
 
     const multiplier = sortDirection === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = (a as any)[sortKey];
-      const bv = (b as any)[sortKey];
+      const av = (a as unknown as Record<string, unknown>)[sortKey];
+      const bv = (b as unknown as Record<string, unknown>)[sortKey];
 
       if (av === undefined || av === null) return 1 * multiplier;
       if (bv === undefined || bv === null) return -1 * multiplier;

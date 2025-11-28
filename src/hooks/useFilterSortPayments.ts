@@ -98,8 +98,9 @@ export default function useFilterSortPayments(
 
     const multiplier = sortDirection === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = (a as any)[sortKey];
-      const bv = (b as any)[sortKey];
+      // `a`/`b`는 `Payment` 타입이지만 런타임에 동적 키로 접근
+      const av = (a as unknown as Record<string, unknown>)[sortKey];
+      const bv = (b as unknown as Record<string, unknown>)[sortKey];
 
       if (av === undefined || av === null) return 1 * multiplier;
       if (bv === undefined || bv === null) return -1 * multiplier;

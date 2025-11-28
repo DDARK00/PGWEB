@@ -18,7 +18,10 @@ function groupBy<T, K extends string | number>(arr: T[], keyFn: (x: T) => K) {
 }
 
 export default function PaymentsVisualizationPanel({ items }: Props) {
-  const [unit, setUnit] = useState<"hour" | "day" | "week" | "month">("month");
+  const [unit, setUnit] = useState<"hour" | "day" | "week" | "month">("hour");
+  const [showStatus, setShowStatus] = useState(true);
+  const [showType, setShowType] = useState(true);
+  const [showSeries, setShowSeries] = useState(true);
   const statusBreakdown = useMemo(() => {
     const map = groupBy(items, (p) => String(p.status ?? "UNKNOWN"));
     const labels = Array.from(map.keys());
@@ -103,21 +106,41 @@ export default function PaymentsVisualizationPanel({ items }: Props) {
   }, [items, unit]);
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 min-w-0">
       <div className="col-span-1 bg-white p-4 rounded shadow">
-        <h3 className="text-sm font-medium mb-2">상태별 분포</h3>
-        <PieChart
-          labels={statusBreakdown.labels}
-          values={statusBreakdown.values}
-        />
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-medium">상태별 분포</h3>
+          <button
+            className="text-xs px-2 py-1 bg-slate-100 rounded"
+            onClick={() => setShowStatus((s) => !s)}
+          >
+            {showStatus ? "숨기기" : "보이기"}
+          </button>
+        </div>
+        {showStatus && (
+          <PieChart
+            labels={statusBreakdown.labels}
+            values={statusBreakdown.values}
+          />
+        )}
       </div>
 
       <div className="col-span-1 bg-white p-4 rounded shadow">
-        <h3 className="text-sm font-medium mb-2">결제유형 분포</h3>
-        <PieChart
-          labels={payTypeBreakdown.labels}
-          values={payTypeBreakdown.values}
-        />
+        <div className="flex items-center justify-between mb-2">
+          <h3 className="text-sm font-medium">결제유형 분포</h3>
+          <button
+            className="text-xs px-2 py-1 bg-slate-100 rounded"
+            onClick={() => setShowType((s) => !s)}
+          >
+            {showType ? "숨기기" : "보이기"}
+          </button>
+        </div>
+        {showType && (
+          <PieChart
+            labels={payTypeBreakdown.labels}
+            values={payTypeBreakdown.values}
+          />
+        )}
       </div>
 
       <div className="col-span-1 lg:col-span-3 bg-white p-4 rounded shadow">
@@ -137,13 +160,25 @@ export default function PaymentsVisualizationPanel({ items }: Props) {
                 {u}
               </button>
             ))}
+            <button
+              className="ml-2 text-xs px-2 py-1 bg-slate-100 rounded"
+              onClick={() => setShowSeries((s) => !s)}
+            >
+              {showSeries ? "숨기기" : "보이기"}
+            </button>
           </div>
         </div>
-        <TimeSeriesChart
-          labels={amountByPeriod.labels}
-          values={amountByPeriod.values}
-          title={`합계 (${unit})`}
-        />
+        {showSeries ? (
+          <TimeSeriesChart
+            labels={amountByPeriod.labels}
+            values={amountByPeriod.values}
+            title={`합계 (${unit})`}
+          />
+        ) : (
+          <div className="p-2 text-sm text-slate-500">
+            그래프가 숨겨져 있습니다.
+          </div>
+        )}
       </div>
     </div>
   );

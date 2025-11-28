@@ -3,7 +3,6 @@ import DashBoardPage from "./pages/DashBoardPage";
 import PaymentsPage from "./pages/PaymentsPage";
 import MerchantListPage from "./pages/MerchantListPage";
 import LoginPage from "./pages/LoginPage";
-import SettingsPage from "./pages/SettingsPage";
 import Layout from "./components/common/Layout";
 
 function App() {
@@ -21,13 +20,10 @@ function App() {
           {/* 가맹점 조회 페이지 */}
           <Route path="/merchants" element={<MerchantListPage />} />
 
-          {/* 거래 정산 페이지: 통합되어 더 이상 별도 페이지 없음 */}
-
           {/* 로그인 페이지 */}
           <Route path="/login" element={<LoginPage />} />
 
-          {/* 설정 페이지 */}
-          <Route path="/settings" element={<SettingsPage />} />
+          {/* 설정 페이지: 제거됨 */}
 
           {/* 홈 또는 기본 페이지 설정 */}
           <Route path="/" element={<DashBoardPage />} />

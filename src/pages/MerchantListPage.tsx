@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import type { Merchant, MerchantDetail } from "../types/types";
 import { useMerchantsQuery } from "../hooks/useMerchants";
 import useStore from "../store/useStore";
 import useFilterSortMerchants from "../hooks/useFilterSortMerchants";
@@ -61,11 +62,11 @@ function MerchantListPage() {
 
   // selected merchant detail state
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
-  const [detail, setDetail] = useState<any | null>(null);
+  const [detail, setDetail] = useState<MerchantDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [detailError, setDetailError] = useState<string | null>(null);
 
-  const onRowClick = async (m: any) => {
+  const onRowClick = async (m: Merchant) => {
     const code = m.mchtCode;
     setSelectedCode(code);
     setDetail(null);
@@ -74,8 +75,12 @@ function MerchantListPage() {
     try {
       const res = await getDetailMerchant(code);
       setDetail(res);
-    } catch (e: any) {
-      setDetailError(e?.message ?? "상세 조회 오류");
+    } catch (e: unknown) {
+      // 에러는 외부 API(axios 등)에서 전달된 다양한 구조를 가질 수 있으므로
+      // catch 파라미터는 `unknown`으로 받습니다. 상세 메시지 접근을 위해
+      // 로컬에서 제한적으로 `any`로 캐스트합니다.
+      const anyE = e as any;
+      setDetailError(anyE?.message ?? "상세 조회 오류");
     } finally {
       setLoadingDetail(false);
     }
